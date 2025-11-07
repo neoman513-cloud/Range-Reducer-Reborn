@@ -465,7 +465,7 @@ int main(int argc, char* argv[]) {
     }
     int blocks = 1024;
     int threads = 128;
-    int device_id = (argc >= 4) ? std::stoi(argv[4]) : 0;
+    int device_id = (argc > 4) ? std::stoi(argv[4]) : 0;
     
     // Set GPU device
     cudaSetDevice(device_id);
