@@ -14,6 +14,6 @@ Run (dont include puzzle number in the command, its just for info):
 
 also if you have multiple GPUS use 0, 1, 2 as last parameter like this:
 
-`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 0` - puzzle 21\
-`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 1` - puzzle 25\
-`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 2` - puzzle 29
+`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 0` - puzzle 33\
+`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 1` - puzzle 33\
+`main.exe 100000000 1ffffffff 4e15e5189752d1eaf444dfd6bff399feb0443977 2` - puzzle 33
