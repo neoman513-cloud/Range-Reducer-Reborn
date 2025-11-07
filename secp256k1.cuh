@@ -7,7 +7,7 @@
 #define BIGINT_WORDS 8
 #define WINDOW_SIZE 16
 #define NUM_BASE_POINTS 64
-#define BATCH_SIZE 64
+#define BATCH_SIZE 128
 #define MOD_EXP 4
 struct BigInt {
     uint32_t data[BIGINT_WORDS];
