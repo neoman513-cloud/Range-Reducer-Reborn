@@ -227,6 +227,20 @@ __global__ void start(const uint8_t* target)
     // priv_base = (base_key + tid * BATCH_SIZE) mod n
     ptx_u256Add(&priv_base, &d_base_key, &offset);
     
+    // Reduce modulo n if needed
+    if (compare_bigint(&priv_base, &const_n) >= 0) {
+        ptx_u256Sub(&priv_base, &priv_base, &const_n);
+    }
+    
+    // Early exit: Check if starting key is within [min, max] range
+    if (compare_bigint(&priv_base, &d_min_bigint) < 0 || 
+        compare_bigint(&priv_base, &d_max_bigint) > 0) {
+        return; // Skip if out of range
+    }
+    
+    // Early exit: Check if already found by another thread
+    if (g_found) return;
+    
     // Array to hold batch of points
     ECPointJac result_jac_batch[BATCH_SIZE];
     uint8_t hash160_batch[BATCH_SIZE][20];
@@ -256,6 +270,9 @@ __global__ void start(const uint8_t* target)
     // --- Optimized batch checking with early exit ---
     #pragma unroll
     for (int i = 0; i < BATCH_SIZE; ++i) {
+        // Check if another thread already found it
+        if (g_found) return;
+        
         if (compare_hash160_fast(hash160_batch[i], target)) {
             if (atomicCAS((int*)&g_found, 0, 1) == 0) {
                 // Calculate the actual private key: priv_base + i
@@ -314,7 +331,7 @@ bool run_with_quantum_data(const char* min, const char* max, const char* target,
     // Performance tracking variables
     uint64_t total_keys_checked = 0;
     auto start_time = std::chrono::high_resolution_clock::now();
-
+	
     uint64_t seed;
 	BCryptGenRandom(NULL, (PUCHAR)&seed, sizeof(seed), BCRYPT_USE_SYSTEM_PREFERRED_RNG);
     std::mt19937_64 gen(seed);
